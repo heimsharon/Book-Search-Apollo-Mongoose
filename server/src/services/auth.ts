@@ -1,13 +1,13 @@
+// Filepath: server/src/services/auth.ts
+// This file contains functions for handling JWT authentication, including signing and verifying tokens
+
 import jwt from 'jsonwebtoken';
 import { GraphQLError } from 'graphql';
 import dotenv from 'dotenv';
+import { JwtPayload } from '../types/interfaces';
 dotenv.config();
 
-export interface JwtPayload {
-  _id: string;
-  username: string;
-  email: string;
-}
+
 
 // Function to authenticate the token and return the user
 export const authenticateToken = (authHeader: string | undefined): JwtPayload | null => {

@@ -1,6 +1,9 @@
-import { JwtPayload } from '../services/auth';
+// Filepath: server/src/schemas/resolvers.ts
+
+import { JwtPayload } from '../types/interfaces';
 import { GraphQLError } from 'graphql';
-import { User } from '../models/User';
+
+
 
 
 const resolvers = {
