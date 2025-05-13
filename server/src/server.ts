@@ -1,83 +1,55 @@
 import express from 'express';
-import cors from 'cors';
-import mongoose from 'mongoose';
+import path from 'node:path';
+import type { Request, Response } from 'express';
+import db from './config/connection.js';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas/index.js';
 import { authenticateToken } from './services/auth.js';
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import path from 'path';
+import { fileURLToPath } from 'node:url';
 
-// Load environment variables
+import dotenv from 'dotenv';
+
 dotenv.config();
 
-// Define __dirname for ES modules
+const app = express();
+const PORT = process.env.PORT || 3001;
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const app = express();
-
-// Middleware for parsing requests
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Enable CORS
-app.use(
-    cors({
-        origin: 'https://book-search-apollo-mongoose.onrender.com',
-        credentials: true,
-    })
-);
+// const __dirname = path.resolve();
 
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+	typeDefs,
+	resolvers,
 });
 
 const startApolloServer = async () => {
-    try {
-        await server.start();
+	await server.start();
+	await db;
 
-        // Connect to MongoDB
-        const MONGODB_URI = process.env.MONGODB_URI;
-        if (!MONGODB_URI) {
-            throw new Error('MONGODB_URI is not defined in the .env file');
-        }
-        await mongoose.connect(MONGODB_URI);
-        console.log('Connected to MongoDB');
+	app.use(express.urlencoded({ extended: false }));
+	app.use(express.json());
 
-        // Apply Apollo Server middleware
-        app.use(
-            '/graphql',
-            expressMiddleware(server, {
-                context: async ({ req }) => {
-                    const authHeader = req.headers.authorization;
-                    const user = authenticateToken(authHeader);
-                    return { user };
-                },
-            })
-        );
+	app.use(
+		'/graphql',
+		expressMiddleware(server as any, {
+			context: authenticateToken as any,
+		})
+	);
 
-        // Serve static files in production
-        if (process.env.NODE_ENV === 'production') {
-            app.use(express.static(path.join(__dirname, '../../client/dist')));
-            app.get('*', (_req, res) => {
-                res.sendFile(
-                    path.join(__dirname, '../../client/dist/index.html')
-                );
-            });
-        }
+	if (process.env.NODE_ENV === 'production') {
+		app.use(express.static(path.join(__dirname, '../../client/dist')));
 
-        // Start the server
-        const PORT = parseInt(process.env.PORT || '3001', 10);
-        app.listen(PORT, '0.0.0.0', () => {
-            console.log(`Server running on http://localhost:${PORT}`);
-        });
-    } catch (err) {
-        console.error('Error starting server:', (err as Error).message);
-        process.exit(1);
-    }
+		app.get('*', (_req: Request, res: Response) => {
+			res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+		});
+	}
+
+	app.listen(PORT, () => {
+		console.log(`API server running on port ${PORT}!`);
+		console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
+	});
 };
 
 startApolloServer();

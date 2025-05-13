@@ -1,112 +1,123 @@
-// Filepath: server/src/schemas/resolvers.ts
-
-import { GraphQLError } from 'graphql';
-import User from '../models/User.js';
 import { signToken } from '../services/auth.js';
-import type { JwtPayload } from '../types/interfaces';
+import { AuthenticationError } from 'apollo-server-errors';
+import User from '../models/User.js';
+
+interface LoginUserArgs {
+    email: string;
+    password: string;
+}
+
+interface AddUserArgs {
+    input: {
+        username: string;
+        email: string;
+        password: string;
+    };
+}
+
+interface SaveBookArgs {
+    input: {
+        authors: string[];
+        description: string;
+        title: string;
+        bookId: string;
+        image?: string;
+        link?: string;
+    };
+}
 
 const resolvers = {
     Query: {
-        me: async (
-            _parent: unknown,
-            _args: unknown,
-            context: { user: JwtPayload | null }
-        ) => {
-            if (!context.user) {
-                throw new GraphQLError('Not authenticated', {
-                    extensions: { code: 'UNAUTHENTICATED' },
-                });
+        me: async (_parent: any, _args: any, context: any) => {
+            if (context.user) {
+                return User.findOne({ _id: context.user._id }).populate(
+                    'savedBooks'
+                );
             }
 
-            const user = await User.findById(context.user._id);
-            if (!user) {
-                throw new GraphQLError('User not found', {
-                    extensions: { code: 'NOT_FOUND' },
-                });
-            }
-
-            return user;
+            throw new AuthenticationError('Could not authenticate user.');
         },
     },
 
     Mutation: {
-        login: async (
-            _parent: unknown,
-            { email, password }: { email: string; password: string }
-        ) => {
-            const user = await User.findOne({ email }) as { username: string; email: string; _id: string; isCorrectPassword: (password: string) => Promise<boolean> } | null;
+        login: async (_parent: any, { email, password }: LoginUserArgs) => {
+            const user = await User.findOne({ email });
+
             if (!user) {
-                throw new GraphQLError('Invalid credentials', {
-                    extensions: { code: 'UNAUTHENTICATED' },
-                });
-            }
-            if (!user) {
-                throw new GraphQLError('Invalid credentials', {
-                    extensions: { code: 'UNAUTHENTICATED' },
-                });
+                throw new AuthenticationError(
+                    'Incorrect email. Could not authenicate user.'
+                );
             }
 
-            const isValidPassword = await user.isCorrectPassword(password);
-            if (!isValidPassword) {
-                throw new GraphQLError('Invalid credentials', {
-                    extensions: { code: 'UNAUTHENTICATED' },
-                });
+            const correctPw = await user.isCorrectPassword(password);
+
+            if (!correctPw) {
+                throw new AuthenticationError(
+                    'Incorrect password. Could not authenciate user.'
+                );
             }
 
-            const token = signToken(
-                user.username as string,
-                user.email as string,
-                user._id as string
-            );
+            const token = signToken(user.username, user.email, user._id);
             return { token, user };
         },
+        addUser: async (_parent: any, { input }: AddUserArgs) => {
+            console.log('resolvers input: ', input);
+            try {
+                const { username, email, password } = input;
 
-        addUser: async (
-            _parent: unknown,
-            args: { username: string; email: string; password: string }
-        ) => {
-            const user = await User.create(args);
-            const token = signToken(
-                user.username as string,
-                user.email as string,
-                user._id as string
-            );
-            return { token, user };
+                const existing = await User.findOne({ email });
+                if (existing) {
+                    console.warn(
+                        'Registration attempt with existing email:',
+                        email
+                    );
+                    throw new AuthenticationError('Email is already in use');
+                }
+
+                const user = await User.create({ username, email, password });
+                console.log('resolvers user: ', user);
+
+                const token = signToken(user.username, user.email, user._id);
+                console.log('resolvers token: ', token);
+
+                return { token, user };
+            } catch (err) {
+                console.error('Registration error:', err);
+                throw new Error('User registration failed');
+            }
         },
-
         saveBook: async (
-            _parent: unknown,
-            { input }: { input: any },
-            context: { user: JwtPayload | null }
+            _parent: any,
+            { input }: SaveBookArgs,
+            context: any
         ) => {
             if (!context.user) {
-                throw new GraphQLError('Not authenticated', {
-                    extensions: { code: 'UNAUTHENTICATED' },
-                });
+                throw new AuthenticationError(
+                    'You need to be logged in to save a book.'
+                );
             }
 
             const updatedUser = await User.findByIdAndUpdate(
-                context.user._id,
+                { _id: context.user._id },
                 { $addToSet: { savedBooks: input } },
-                { new: true, runValidators: true }
-            );
+                { new: true }
+            ).populate('savedBooks');
 
             return updatedUser;
         },
-
         removeBook: async (
-            _parent: unknown,
+            _parent: any,
             { bookId }: { bookId: string },
-            context: { user: JwtPayload | null }
+            context: any
         ) => {
             if (!context.user) {
-                throw new GraphQLError('Not authenticated', {
-                    extensions: { code: 'UNAUTHENTICATED' },
-                });
+                throw new AuthenticationError(
+                    'You need to be logged in to remove a saved book.'
+                );
             }
 
             const updatedUser = await User.findByIdAndUpdate(
-                context.user._id,
+                { _id: context.user._id },
                 { $pull: { savedBooks: { bookId } } },
                 { new: true }
             );
