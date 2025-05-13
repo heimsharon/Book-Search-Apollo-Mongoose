@@ -1,3 +1,6 @@
+//Filepath: client/src/components/signupForm.tsx
+// This file contains the signup form component, which is used for user signup and handles the signup form submission.
+
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';

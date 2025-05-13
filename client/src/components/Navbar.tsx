@@ -1,9 +1,10 @@
+//Filepath: client/src/components/Navbar.tsx
+// This file contains the AppNavbar component, which is used for the navigation bar of the application.
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Container, Modal, Tab } from 'react-bootstrap';
 import SignUpForm from './SignupForm.tsx';
 import LoginForm from './LoginForm.tsx';
-
 import Auth from '../utils/auth';
 
 const AppNavbar = () => {
