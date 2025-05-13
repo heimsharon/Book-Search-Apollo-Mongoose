@@ -7,8 +7,6 @@ import dotenv from 'dotenv';
 import { JwtPayload } from '../types/interfaces';
 dotenv.config();
 
-
-
 // Function to authenticate the token and return the user
 export const authenticateToken = (authHeader: string | undefined): JwtPayload | null => {
   if (!authHeader) {
@@ -23,7 +21,8 @@ export const authenticateToken = (authHeader: string | undefined): JwtPayload | 
   try {
     const user = jwt.verify(token, secretKey) as JwtPayload;
     return user; // Return the decoded user payload
-  } catch (err) {
+  }
+  catch (err) {
     throw new GraphQLError('Invalid or expired token', {
       extensions: { code: 'UNAUTHENTICATED' },
     });
