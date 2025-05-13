@@ -5,6 +5,15 @@ import { removeBookId } from '../utils/localStorage';
 import { GET_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
 
+// Define a type for the saved books
+interface SavedBook {
+    bookId: string;
+    title: string;
+    authors: string[];
+    description: string;
+    image?: string;
+}
+
 const SavedBooks = () => {
     // Fetch user data using the GET_ME query
     const { loading, data } = useQuery(GET_ME);
@@ -48,7 +57,7 @@ const SavedBooks = () => {
             <div className="text-light bg-dark p-5">
                 <Container>
                     {userData.username ? (
-                        <h1>Viewing {userData.username}'s saved books!</h1>
+                        <h1>Viewing {userData.username}&apos;s saved books!</h1>
                     ) : (
                         <h1>Viewing saved books!</h1>
                     )}
@@ -57,15 +66,14 @@ const SavedBooks = () => {
             <Container>
                 <h2 className="pt-5">
                     {userData.savedBooks.length
-                        ? `Viewing ${userData.savedBooks.length} saved ${
-                              userData.savedBooks.length === 1
-                                  ? 'book'
-                                  : 'books'
-                          }:`
+                        ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1
+                            ? 'book'
+                            : 'books'
+                        }:`
                         : 'You have no saved books!'}
                 </h2>
                 <Row>
-                    {userData.savedBooks.map((book) => {
+                    {userData.savedBooks.map((book: SavedBook) => {
                         return (
                             <Col md="4" key={book.bookId}>
                                 <Card border="dark">
@@ -79,7 +87,7 @@ const SavedBooks = () => {
                                     <Card.Body>
                                         <Card.Title>{book.title}</Card.Title>
                                         <p className="small">
-                                            Authors: {book.authors}
+                                            Authors: {book.authors.join(', ')}
                                         </p>
                                         <Card.Text>
                                             {book.description}

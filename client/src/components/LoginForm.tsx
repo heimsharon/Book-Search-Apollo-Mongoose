@@ -6,7 +6,7 @@ import { LOGIN_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 import type { User } from '../models/User';
 
-const LoginForm = ({}: { handleModalClose: () => void }) => {
+const LoginForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
     const [userFormData, setUserFormData] = useState<User>({
         username: '',
         email: '',
@@ -34,7 +34,6 @@ const LoginForm = ({}: { handleModalClose: () => void }) => {
         }
 
         try {
-            // Execute the LOGIN_USER mutation
             const { data } = await loginUser({
                 variables: {
                     email: userFormData.email,
@@ -48,6 +47,7 @@ const LoginForm = ({}: { handleModalClose: () => void }) => {
 
             const { token } = data.login;
             Auth.login(token);
+            handleModalClose();
         } catch (err) {
             console.error(err);
             setShowAlert(true);
