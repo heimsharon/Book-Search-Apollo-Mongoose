@@ -34,7 +34,12 @@ const resolvers = {
             _parent: unknown,
             { email, password }: { email: string; password: string }
         ) => {
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ email }) as { username: string; email: string; _id: string; isCorrectPassword: (password: string) => Promise<boolean> } | null;
+            if (!user) {
+                throw new GraphQLError('Invalid credentials', {
+                    extensions: { code: 'UNAUTHENTICATED' },
+                });
+            }
             if (!user) {
                 throw new GraphQLError('Invalid credentials', {
                     extensions: { code: 'UNAUTHENTICATED' },
@@ -48,7 +53,11 @@ const resolvers = {
                 });
             }
 
-            const token = signToken(user.username, user.email, user._id);
+            const token = signToken(
+                user.username as string,
+                user.email as string,
+                user._id as string
+            );
             return { token, user };
         },
 
@@ -57,7 +66,11 @@ const resolvers = {
             args: { username: string; email: string; password: string }
         ) => {
             const user = await User.create(args);
-            const token = signToken(user.username, user.email, user._id);
+            const token = signToken(
+                user.username as string,
+                user.email as string,
+                user._id as string
+            );
             return { token, user };
         },
 
