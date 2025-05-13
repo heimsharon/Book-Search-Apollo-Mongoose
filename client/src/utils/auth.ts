@@ -1,5 +1,5 @@
 // use this to decode a token and get the user's information out of it
-import { jwtDecode } from 'jwt-decode';
+import { type JwtPayload, jwtDecode } from 'jwt-decode';
 
 interface UserToken {
   name: string;
@@ -26,8 +26,8 @@ class AuthService {
       const decoded = jwtDecode<UserToken>(token);
       if (decoded.exp < Date.now() / 1000) {
         return true;
-      } 
-      
+      }
+
       return false;
     } catch (err) {
       return false;

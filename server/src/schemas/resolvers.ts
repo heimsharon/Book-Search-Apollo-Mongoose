@@ -2,12 +2,8 @@
 
 import { JwtPayload } from '../types/interfaces';
 import { GraphQLError } from 'graphql';
-import {
-    getSingleUser as getSingleUserController,
-    createUser as createUserController,
-    saveBook as saveBookController,
-    deleteBook as deleteBookController,
-} from '../controllers/user-controller.js';
+import User from '../models/User.js';
+import { signToken } from '../services/auth.js';
 
 const resolvers = {
     Query: {
@@ -19,14 +15,23 @@ const resolvers = {
                 });
             }
 
-            // Call the controller function
-            const req = { user: context.user, params: args } as any;
-            const res = {
-                json: (data: any) => data,
-                status: (code: number) => ({ json: (data: any) => ({ code, data }) }),
-            } as any;
+            try {
+                const foundUser = await User.findOne({
+                    $or: [{ _id: args.id }, { username: args.username }],
+                });
 
-            return await getSingleUserController(req, res);
+                if (!foundUser) {
+                    throw new GraphQLError('Cannot find a user with this id or username', {
+                        extensions: { code: 'NOT_FOUND' },
+                    });
+                }
+
+                return foundUser;
+            } catch (err) {
+                throw new GraphQLError('Error fetching user', {
+                    extensions: { code: 'INTERNAL_SERVER_ERROR', details: err },
+                });
+            }
         },
 
         me: (_parent: unknown, _args: unknown, context: { user: JwtPayload }) => {
@@ -42,13 +47,22 @@ const resolvers = {
     Mutation: {
         // Resolver for creating a user
         createUser: async (_parent: unknown, args: { username: string; email: string; password: string }) => {
-            const req = { body: args } as any;
-            const res = {
-                json: (data: any) => data,
-                status: (code: number) => ({ json: (data: any) => ({ code, data }) }),
-            } as any;
+            try {
+                const user = await User.create(args);
 
-            return await createUserController(req, res);
+                if (!user) {
+                    throw new GraphQLError('Error creating user', {
+                        extensions: { code: 'BAD_REQUEST' },
+                    });
+                }
+
+                const token = signToken(user.username, user.email, user._id);
+                return { token, user };
+            } catch (err) {
+                throw new GraphQLError('Error creating user', {
+                    extensions: { code: 'INTERNAL_SERVER_ERROR', details: err },
+                });
+            }
         },
 
         // Resolver for saving a book
@@ -59,13 +73,25 @@ const resolvers = {
                 });
             }
 
-            const req = { user: context.user, body: args.book } as any;
-            const res = {
-                json: (data: any) => data,
-                status: (code: number) => ({ json: (data: any) => ({ code, data }) }),
-            } as any;
+            try {
+                const updatedUser = await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $addToSet: { savedBooks: args.book } },
+                    { new: true, runValidators: true }
+                );
 
-            return await saveBookController(req, res);
+                if (!updatedUser) {
+                    throw new GraphQLError('Error saving book', {
+                        extensions: { code: 'NOT_FOUND' },
+                    });
+                }
+
+                return updatedUser;
+            } catch (err) {
+                throw new GraphQLError('Error saving book', {
+                    extensions: { code: 'INTERNAL_SERVER_ERROR', details: err },
+                });
+            }
         },
 
         // Resolver for deleting a book
@@ -76,13 +102,25 @@ const resolvers = {
                 });
             }
 
-            const req = { user: context.user, params: { bookId: args.bookId } } as any;
-            const res = {
-                json: (data: any) => data,
-                status: (code: number) => ({ json: (data: any) => ({ code, data }) }),
-            } as any;
+            try {
+                const updatedUser = await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { savedBooks: { bookId: args.bookId } } },
+                    { new: true }
+                );
 
-            return await deleteBookController(req, res);
+                if (!updatedUser) {
+                    throw new GraphQLError('Error deleting book', {
+                        extensions: { code: 'NOT_FOUND' },
+                    });
+                }
+
+                return updatedUser;
+            } catch (err) {
+                throw new GraphQLError('Error deleting book', {
+                    extensions: { code: 'INTERNAL_SERVER_ERROR', details: err },
+                });
+            }
         },
     },
 };
