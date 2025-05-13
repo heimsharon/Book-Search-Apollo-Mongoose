@@ -1,17 +1,18 @@
 import mongoose from 'mongoose';
 
-const db = mongoose;
 
-db.set('strictQuery', false); // Suppress deprecation warnings for strictQuery
+mongoose.connect(
+    process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/googlebooks');
+const db = mongoose.connection;
+db.on('error', (error) => {
+    console.error('Connection error:', error);
+}
+);
+db.once('open', () => {
+    console.log('Connected to MongoDB');
+}
+);
 
-const MONGODB_URI =
-    process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/googlebooks';
 
-db.connect(MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB successfully!'))
-    .catch((err) => {
-        console.error('Error connecting to MongoDB:', err.message);
-        process.exit(1); // Exit the process if the connection fails
-    });
 
 export default db;
