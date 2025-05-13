@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/googlebooks');
+const db = mongoose;
 
-export default mongoose.connection;
+db.set('strictQuery', false); // Optional: Suppress deprecation warnings for strictQuery
+
+db.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/googlebooks');
+
+export default db;
