@@ -33,7 +33,7 @@ type Mutation {
 input BookInput {
   bookId: ID!
   title: String!
-  authors: [String]
+  authors: [String]!
   description: String
   image: String
   link: String

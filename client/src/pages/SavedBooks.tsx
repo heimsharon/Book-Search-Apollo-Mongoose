@@ -4,15 +4,7 @@ import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 import { GET_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
-
-// Define a type for the saved books
-interface SavedBook {
-    bookId: string;
-    title: string;
-    authors: string[];
-    description: string;
-    image?: string;
-}
+import type { Book } from '../models/Book';
 
 const SavedBooks = () => {
     // Fetch user data using the GET_ME query
@@ -31,7 +23,6 @@ const SavedBooks = () => {
         }
 
         try {
-            // Execute the REMOVE_BOOK mutation
             const { data } = await removeBook({
                 variables: { bookId },
             });
@@ -42,6 +33,9 @@ const SavedBooks = () => {
 
             // Update local storage and UI
             removeBookId(bookId);
+            userData.savedBooks = userData.savedBooks.filter(
+                (book: Book) => book.bookId !== bookId
+            );
         } catch (err) {
             console.error(err);
         }
@@ -66,14 +60,15 @@ const SavedBooks = () => {
             <Container>
                 <h2 className="pt-5">
                     {userData.savedBooks.length
-                        ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1
-                            ? 'book'
-                            : 'books'
-                        }:`
+                        ? `Viewing ${userData.savedBooks.length} saved ${
+                              userData.savedBooks.length === 1
+                                  ? 'book'
+                                  : 'books'
+                          }:`
                         : 'You have no saved books!'}
                 </h2>
                 <Row>
-                    {userData.savedBooks.map((book: SavedBook) => {
+                    {userData.savedBooks.map((book: Book) => {
                         return (
                             <Col md="4" key={book.bookId}>
                                 <Card border="dark">
@@ -87,7 +82,10 @@ const SavedBooks = () => {
                                     <Card.Body>
                                         <Card.Title>{book.title}</Card.Title>
                                         <p className="small">
-                                            Authors: {book.authors.join(', ')}
+                                            Authors:{' '}
+                                            {book.authors.length
+                                                ? book.authors.join(', ')
+                                                : 'No authors available'}
                                         </p>
                                         <Card.Text>
                                             {book.description}

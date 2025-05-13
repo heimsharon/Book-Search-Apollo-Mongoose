@@ -6,6 +6,7 @@ import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 import type { User } from '../models/User';
 
+
 const SignupForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
     const [userFormData, setUserFormData] = useState<User>({
         username: '',
