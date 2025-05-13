@@ -43,14 +43,14 @@ const startApolloServer = async () => {
             expressMiddleware(server, {
                 context: async ({ req }) => {
                     const authHeader = req.headers.authorization;
-                    const user = authenticateToken(authHeader); // Ensure this function is working correctly
+                    const user = authenticateToken(authHeader);
                     return { user };
                 },
             })
         );
 
-        const PORT = process.env.PORT || 3001;
-        app.listen(PORT, () => {
+        const PORT = parseInt(process.env.PORT || '3001', 10);
+        app.listen(PORT, '0.0.0.0', () => {
             console.log(`Server running on http://localhost:${PORT}`);
         });
     } catch (err) {
