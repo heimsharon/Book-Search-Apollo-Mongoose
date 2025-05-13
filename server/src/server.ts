@@ -9,7 +9,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
-// Load environment variables from .env file
+// Load environment variables
 dotenv.config();
 
 // Define __dirname for ES modules
@@ -18,8 +18,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Add this line to parse incoming JSON requests
+// Middleware for parsing requests
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Enable CORS
 app.use(
@@ -38,15 +39,15 @@ const startApolloServer = async () => {
     try {
         await server.start();
 
-        // Connect to MongoDB using the URI from .env
+        // Connect to MongoDB
         const MONGODB_URI = process.env.MONGODB_URI;
         if (!MONGODB_URI) {
             throw new Error('MONGODB_URI is not defined in the .env file');
         }
-
         await mongoose.connect(MONGODB_URI);
         console.log('Connected to MongoDB');
 
+        // Apply Apollo Server middleware
         app.use(
             '/graphql',
             expressMiddleware(server, {
@@ -58,21 +59,24 @@ const startApolloServer = async () => {
             })
         );
 
-        // Serve static files from the client build directory
-        app.use(express.static(path.join(__dirname, '../../client/dist')));
+        // Serve static files in production
+        if (process.env.NODE_ENV === 'production') {
+            app.use(express.static(path.join(__dirname, '../../client/dist')));
+            app.get('*', (_req, res) => {
+                res.sendFile(
+                    path.join(__dirname, '../../client/dist/index.html')
+                );
+            });
+        }
 
-        // Fallback to serve `index.html` for any unknown routes
-        app.get('*', (_req, res) => {
-            res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
-        });
-
+        // Start the server
         const PORT = parseInt(process.env.PORT || '3001', 10);
         app.listen(PORT, '0.0.0.0', () => {
             console.log(`Server running on http://localhost:${PORT}`);
         });
     } catch (err) {
         console.error('Error starting server:', (err as Error).message);
-        process.exit(1); // Exit the process if the server fails to start
+        process.exit(1);
     }
 };
 
