@@ -1,7 +1,6 @@
 // Filepath: server/src/types/interfaces.ts
 // These TypeScript interfaces define the structure of various objects used in the application
 
-
 // Interface for JWT payload
 export interface JwtPayload {
     _id: string;

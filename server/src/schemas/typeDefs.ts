@@ -3,6 +3,7 @@ type User {
   _id: ID!
   username: String!
   email: String!
+  bookCount: Int
   savedBooks: [Book]
 }
 
@@ -21,13 +22,14 @@ type Auth {
 }
 
 type Query {
-  getSingleUser(id: ID, username: String): User
+  me: User
 }
 
 type Mutation {
-  createUser(username: String!, email: String!, password: String!): Auth
-  saveBook(book: BookInput!): User
-  deleteBook(bookId: ID!): User
+  login(email: String!, password: String!): Auth
+  addUser(username: String!, email: String!, password: String!): Auth
+  saveBook(input: BookInput!): User
+  removeBook(bookId: ID!): User
 }
 
 input BookInput {
@@ -41,4 +43,3 @@ input BookInput {
 `;
 
 export default typeDefs;
-

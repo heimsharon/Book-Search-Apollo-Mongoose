@@ -4,20 +4,17 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
-import type { User } from '../models/User';
-
+import type { LoginFormData } from '../models/User';
 
 const LoginForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
-    const [userFormData, setUserFormData] = useState<User>({
-        username: '',
+    const [userFormData, setUserFormData] = useState<LoginFormData>({
         email: '',
         password: '',
-        savedBooks: [],
     });
+
     const [validated] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
 
-    // Use the LOGIN_USER mutation
     const [loginUser] = useMutation(LOGIN_USER);
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -55,10 +52,8 @@ const LoginForm = ({ handleModalClose }: { handleModalClose: () => void }) => {
         }
 
         setUserFormData({
-            username: '',
             email: '',
             password: '',
-            savedBooks: [],
         });
     };
 
