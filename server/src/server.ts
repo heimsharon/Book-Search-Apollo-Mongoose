@@ -36,6 +36,7 @@ const startApolloServer = async () => {
         }
 
         await mongoose.connect(MONGODB_URI);
+        console.log('Connected to MongoDB');
 
         app.use(
             '/graphql',
@@ -53,7 +54,8 @@ const startApolloServer = async () => {
             console.log(`Server running on http://localhost:${PORT}`);
         });
     } catch (err) {
-        console.error('Error starting server:', err);
+        console.error('Error starting server:', (err as Error).message);
+        process.exit(1); // Exit the process if the server fails to start
     }
 };
 
