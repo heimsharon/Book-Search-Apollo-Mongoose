@@ -6,11 +6,15 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas/index.js';
 import { authenticateToken } from './services/auth.js';
 import dotenv from 'dotenv';
+import path from 'path';
 
 // Load environment variables from .env file
 dotenv.config();
 
 const app = express();
+
+// Add this line to parse incoming JSON requests
+app.use(express.json());
 
 // Enable CORS
 app.use(
@@ -48,6 +52,14 @@ const startApolloServer = async () => {
                 },
             })
         );
+
+        // Serve static files from the client build directory
+        app.use(express.static(path.join(__dirname, '../../client/dist')));
+
+        // Fallback to serve `index.html` for any unknown routes
+        app.get('*', (_req, res) => {
+            res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+        });
 
         const PORT = parseInt(process.env.PORT || '3001', 10);
         app.listen(PORT, '0.0.0.0', () => {
