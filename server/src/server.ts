@@ -15,8 +15,8 @@ const app = express();
 // Enable CORS
 app.use(
     cors({
-        origin: 'http://localhost:3000', // Allow requests from the client
-        credentials: true, // Allow cookies and credentials
+        origin: 'https://book-search-apollo-mongoose.onrender.com',
+        credentials: true,
     })
 );
 
