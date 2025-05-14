@@ -1,3 +1,5 @@
+// This file defines GraphQL mutation operations for user authentication and book management.
+// These mutations are used to interact with the GraphQL API for login, user registration, saving books, and removing books.
 import { gql } from '@apollo/client';
 
 export const LOGIN_USER = gql`

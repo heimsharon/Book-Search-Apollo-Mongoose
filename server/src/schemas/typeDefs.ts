@@ -1,3 +1,5 @@
+// Filepath: server/src/schemas/typeDefs.ts
+// This file defines the GraphQL type definitions for the application.
 const typeDefs = `
 type User {
   _id: ID!

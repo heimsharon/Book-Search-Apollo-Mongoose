@@ -1,3 +1,6 @@
+//Filepath: client/src/components/SignupForm.tsx
+// This file contains the SignupForm component, which is used for user signup functionality.
+
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
@@ -6,8 +9,9 @@ import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 import type { User } from '../models/User';
 
+// The SignupForm component handles user registration by collecting username, email, and password.
 const SignupForm = ({}: { handleModalClose: () => void }) => {
-    // set initial form state
+    // State to manage the form data
     const [userFormData, setUserFormData] = useState<User>({
         username: '',
         email: '',
@@ -15,22 +19,26 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
         savedBooks: [],
     });
 
-    // set state for form validation
+    // State to manage form validation status.
     const [validated] = useState(false);
-    // set state for alert
+
+    // State to control the visibility of the alert message for signup errors.
     const [showAlert, setShowAlert] = useState(false);
 
+    // Apollo mutation hook for the ADD_USER mutation, which handles user registration.
     const [addUser] = useMutation(ADD_USER);
 
+    // Function to handle changes in the input fields and update the userFormData state.
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setUserFormData({ ...userFormData, [name]: value });
     };
 
+    // Function to handle form submission for user signup.
     const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        // check if form has everything (as per react-bootstrap docs)
+        // Perform form validation. If invalid, prevent submission.
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault();
@@ -38,6 +46,7 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
         }
 
         try {
+            // Execute the addUser mutation with the form data (username, email, and password).
             const { data } = await addUser({
                 variables: {
                     input: {
@@ -48,13 +57,16 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
                 },
             });
 
+            // Extract the token from the mutation response and log in the user.
             const { token } = data.addUser;
             Auth.login(token);
         } catch (err) {
+            // If an error occurs, log it to the console and show the alert message.
             console.error(err);
             setShowAlert(true);
         }
 
+        // Reset the form data to empty values after submission.
         setUserFormData({
             username: '',
             email: '',
@@ -65,9 +77,9 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
 
     return (
         <>
-            {/* This is needed for the validation functionality above */}
+            {/* Form for user signup */}
             <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
-                {/* show alert if server response is bad */}
+                {/* Alert message for signup errors */}
                 <Alert
                     dismissible
                     onClose={() => setShowAlert(false)}
@@ -77,6 +89,7 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
                     Something went wrong with your signup!
                 </Alert>
 
+                {/* Username input field */}
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="username">Username</Form.Label>
                     <Form.Control
@@ -92,6 +105,7 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
                     </Form.Control.Feedback>
                 </Form.Group>
 
+                {/* Email input field */}
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="email">Email</Form.Label>
                     <Form.Control
@@ -107,6 +121,7 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
                     </Form.Control.Feedback>
                 </Form.Group>
 
+                {/* Password input field */}
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="password">Password</Form.Label>
                     <Form.Control
@@ -121,6 +136,8 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
                         Password is required!
                     </Form.Control.Feedback>
                 </Form.Group>
+
+                {/* Submit button for the signup form */}
                 <Button
                     disabled={
                         !(
