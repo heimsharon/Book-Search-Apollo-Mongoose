@@ -8,17 +8,17 @@ The **Book Search Engine** is a full-stack MERN (MongoDB, Express, React, Node.j
 
 ## Table of Contents
 
--   [Book Search Engine](#book-search-engine)
-    -   [Description](#description)
-    -   [Table of Contents](#table-of-contents)
-    -   [Features](#features)
-    -   [Prerequisites](#prerequisites)
-    -   [Technologies Used](#technologies-used)
-    -   [Installation](#installation)
-    -   [Usage](#usage)
-    -   [Screenshots](#screenshots)
-        -   [Search for Books](#search-for-books)
-    -   [License](#license)
+- [Book Search Engine](#book-search-engine)
+  - [Description](#description)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Prerequisites](#prerequisites)
+  - [Technologies Used](#technologies-used)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Screenshots](#screenshots)
+    - [Search for Books](#search-for-books)
+  - [License](#license)
 
 ---
 
