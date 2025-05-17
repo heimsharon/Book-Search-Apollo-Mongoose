@@ -17,23 +17,23 @@ _A full-stack MERN book search app with secure JWT authentication, user book man
 
 ## Table of Contents
 
-- [Book Search Engine](#book-search-engine)
-  - [Table of Contents](#table-of-contents)
-  - [Description](#description)
-  - [Features](#features)
-  - [Prerequisites](#prerequisites)
-  - [Technologies Used](#technologies-used)
-  - [Quick Start](#quick-start)
-  - [Installation](#installation)
-  - [API Documentation](#api-documentation)
-  - [Usage](#usage)
-  - [Screenshots](#screenshots)
-    - [Search for Books](#search-for-books)
-  - [License](#license)
-  - [Notes](#notes)
-  - [Contributing, Support, and FAQ](#contributing-support-and-faq)
-  - [Acknowledgments](#acknowledgments)
-  - [Author](#author)
+-   [Book Search Engine](#book-search-engine)
+    -   [Table of Contents](#table-of-contents)
+    -   [Description](#description)
+    -   [Features](#features)
+    -   [Prerequisites](#prerequisites)
+    -   [Technologies Used](#technologies-used)
+    -   [Quick Start](#quick-start)
+    -   [Installation](#installation)
+    -   [API Documentation](#api-documentation)
+    -   [Usage](#usage)
+    -   [Screenshots](#screenshots)
+        -   [Search for Books](#search-for-books)
+    -   [License](#license)
+    -   [Notes](#notes)
+    -   [Contributing, Support, and FAQ](#contributing-support-and-faq)
+    -   [Acknowledgments](#acknowledgments)
+    -   [Author](#author)
 
 ---
 
@@ -189,7 +189,12 @@ See [API.md](API.md) for full details on using the GraphQL API, including endpoi
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the [MIT License](LICENSE).
+
+You are free to use, modify, and distribute this software for personal or commercial purposes, provided you include the original copyright
+and license notice in any copies or substantial portions of the software.
+
+See the [LICENSE](LICENSE) file for full details.
 
 ---
 
