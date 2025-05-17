@@ -17,23 +17,23 @@ _A full-stack MERN book search app with secure JWT authentication, user book man
 
 ## Table of Contents
 
--   [Book Search Engine](#book-search-engine)
-    -   [Table of Contents](#table-of-contents)
-    -   [Description](#description)
-    -   [Features](#features)
-    -   [Prerequisites](#prerequisites)
-    -   [Technologies Used](#technologies-used)
-    -   [Quick Start](#quick-start)
-    -   [Installation](#installation)
-    -   [API Documentation](#api-documentation)
-    -   [Usage](#usage)
-    -   [Screenshots](#screenshots)
-        -   [Search for Books](#search-for-books)
-    -   [License](#license)
-    -   [Notes](#notes)
-    -   [Contributing, Support, and FAQ](#contributing-support-and-faq)
-    -   [Acknowledgments](#acknowledgments)
-    -   [Author](#author)
+- [Book Search Engine](#book-search-engine)
+  - [Table of Contents](#table-of-contents)
+  - [Description](#description)
+  - [Features](#features)
+  - [Prerequisites](#prerequisites)
+  - [Technologies Used](#technologies-used)
+  - [Quick Start](#quick-start)
+  - [Installation](#installation)
+  - [API Documentation](#api-documentation)
+  - [Usage](#usage)
+  - [Screenshots](#screenshots)
+    - [Search for Books](#search-for-books)
+  - [License](#license)
+  - [Notes](#notes)
+  - [Contributing, Support, and FAQ](#contributing-support-and-faq)
+  - [Acknowledgments](#acknowledgments)
+  - [Author](#author)
 
 ---
 
@@ -160,7 +160,7 @@ _A full-stack MERN book search app with secure JWT authentication, user book man
 
 ## API Documentation
 
-See API.md for full details on using the GraphQL API, including endpoint, example queries/mutations, and authentication instructions.
+See [API.md](API.md) for full details on using the GraphQL API, including endpoint, example queries/mutations, and authentication instructions.
 
 ---
 
