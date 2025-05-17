@@ -7,6 +7,7 @@ _A full-stack MERN book search app with secure JWT authentication, user book man
 ![Node.js](https://img.shields.io/badge/Node.js-16%2B-brightgreen)
 ![React](https://img.shields.io/badge/React-18+-blue)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-blue)
+![Student Project](https://img.shields.io/badge/student_project-s_heim-yellow)
 
 **Live Demo:** [Book Search Engine on Render](https://book-search-apollo-mongoose.onrender.com)
 
@@ -17,23 +18,23 @@ _A full-stack MERN book search app with secure JWT authentication, user book man
 
 ## Table of Contents
 
--   [Book Search Engine](#book-search-engine)
-    -   [Table of Contents](#table-of-contents)
-    -   [Description](#description)
-    -   [Features](#features)
-    -   [Prerequisites](#prerequisites)
-    -   [Technologies Used](#technologies-used)
-    -   [Quick Start](#quick-start)
-    -   [Installation](#installation)
-    -   [API Documentation](#api-documentation)
-    -   [Usage](#usage)
-    -   [Screenshots](#screenshots)
-        -   [Search for Books](#search-for-books)
-    -   [License](#license)
-    -   [Notes](#notes)
-    -   [Contributing, Support, and FAQ](#contributing-support-and-faq)
-    -   [Acknowledgments](#acknowledgments)
-    -   [Author](#author)
+- [Book Search Engine](#book-search-engine)
+  - [Table of Contents](#table-of-contents)
+  - [Description](#description)
+  - [Features](#features)
+  - [Prerequisites](#prerequisites)
+  - [Technologies Used](#technologies-used)
+  - [Quick Start](#quick-start)
+  - [Installation](#installation)
+  - [API Documentation](#api-documentation)
+  - [Usage](#usage)
+  - [Screenshots](#screenshots)
+    - [Search for Books](#search-for-books)
+  - [License](#license)
+  - [Notes](#notes)
+  - [Contributing, Support, and FAQ](#contributing-support-and-faq)
+  - [Acknowledgments](#acknowledgments)
+  - [Author](#author)
 
 ---
 
@@ -189,12 +190,12 @@ See [API.md](API.md) for full details on using the GraphQL API, including endpoi
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](./LICENSE.txt).
 
 You are free to use, modify, and distribute this software for personal or commercial purposes, provided you include the original copyright
 and license notice in any copies or substantial portions of the software.
 
-See the [LICENSE](LICENSE) file for full details.
+See the [MIT License text](https://opensource.org/licenses/MIT) for full details.
 
 ---
 
