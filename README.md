@@ -189,7 +189,7 @@ See [API.md](API.md) for full details on using the GraphQL API, including endpoi
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
